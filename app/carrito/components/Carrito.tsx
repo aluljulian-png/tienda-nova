@@ -5,10 +5,10 @@
     import CarritoVacio from "./CarritoVacio";
     import { useState, useEffect, useRef } from "react"
     import { mockListaProductos } from "@/app/data/data";
+    import type { Producto } from "@/app/types/producto";    
 
-export type Producto ={id:number; nombre:string;   precio:number;   cantidad:number;  };
 
-export default function Carrito()   {
+export default function Carrito()  {
 
 const [listaProductos, setListaProductos] = useState<Producto[]>(mockListaProductos);
 
@@ -65,6 +65,15 @@ const aumentarCantidad = (producto: Producto) => {
     prev.map((item) =>
       item.id === producto.id
         ? { ...item, cantidad: item.cantidad + 1 }
+        : item
+    )
+  );
+};
+const reducirCantidad = (producto: Producto) => {
+  setListaProductos((prev) =>
+    prev.map((item) =>
+      item.id === producto.id
+        ? { ...item, cantidad: item.cantidad - 1 }
         : item
     )
   );
@@ -156,7 +165,7 @@ useEffect(() => {
         {carritoAbierto && (
 <> 
         
-    <EncabezadoCarrito cantidadTotal={cantidadTotal} />
+    <EncabezadoCarrito/>
 
         {listaProductos.length === 0 ? (
             <CarritoVacio />    
@@ -167,6 +176,7 @@ useEffect(() => {
             agregarProducto={agregarProducto}
             aumentarCantidad={aumentarCantidad}
             eliminarProducto={eliminarProducto}
+            reducirCantidad={reducirCantidad}
               />
             <ResumenCarrito
                 cantidadTotal={cantidadTotal}

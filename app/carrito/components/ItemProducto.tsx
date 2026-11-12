@@ -1,17 +1,19 @@
-import { Producto } from "./Carrito";
+import { Producto } from "@/app/types/producto";
 
 
 export default function ItemProducto({
   producto,
   onVerDetalle,
   onAumentar,
-  onEliminar
+  onEliminar,
+  onReducir,
 }: {
   producto: Producto;
   onVerDetalle: () => void;
   onAumentar: () => void;
   onEliminar: () => void;
-}) {
+  onReducir: () => void;
+}) { 
     return (
 
     <div className="rounded-2xl border border-gray-200 text-gray-800 relative bg-blue-600 p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
@@ -29,6 +31,11 @@ export default function ItemProducto({
 onClick={onEliminar}
 >
         Eliminar
+</button>   
+<button className="bg-red-600 text-white rounded-lg p-2 mt-3 ml-2"
+onClick={onReducir}
+>
+        Reducir Cantidad
 </button>   
         <h3>{producto.nombre}</h3>
         <p>Precio: ${producto.precio}</p>

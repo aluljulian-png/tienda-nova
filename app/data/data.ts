@@ -1,4 +1,4 @@
-import { Producto } from "../carrito/components/Carrito";
+import { Producto } from "../types/producto"
 
 
 export const  mockListaProductos:Producto[] = [
