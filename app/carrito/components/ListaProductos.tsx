@@ -1,4 +1,4 @@
-import { Producto } from "@/app/types/producto"
+import type { Producto } from "@/app/types/producto"
 import ItemProducto from "./ItemProducto"
 import { useState, useEffect } from "react";
 import Modal from "./Modal";
@@ -7,9 +7,9 @@ type Props = {
     productos: Producto[];
     mostrarNotificacion: (mensaje: string) => void;
     agregarProducto:     (producto: Producto) => void;
-    aumentarCantidad:    (producto: Producto) => void;
+    aumentarCantidad:    (id: number) => void;
     eliminarProducto:    (producto: Producto) => void;
-    reducirCantidad:     (producto: Producto)  => void;
+    reducirCantidad:     (id: number)  => void;
 };
 
 function ListaProductos(props: Props) {
@@ -63,10 +63,10 @@ return () => {
         {props.productos.map((producto, index) => (
         <ItemProducto   producto={producto}
                         onVerDetalle={() => verDetalle(producto)} 
-                        onAumentar={() => props.aumentarCantidad(producto)}
+                        onAumentar={() => props.aumentarCantidad(producto.id)}
                         key={producto.id}
                         onEliminar={() => props.eliminarProducto(producto)}  
-                        onReducir={() => props.reducirCantidad(producto)}/>
+                        onReducir={() => props.reducirCantidad(producto.id)}/>
                         
                     ))}
                     {isOpen && productoSeleccionado && (

@@ -1,15 +1,18 @@
-import React from 'react'
-import { Producto } from '../productos/page'
+"use client";
+import { useContext } from "react";
+import { Producto } from "../types/producto"
+import { CarritoContext } from "../context/CarritoContext";
 
 function ProductCard({producto}: {producto:Producto}) {
+const {agregarProducto} = useContext(CarritoContext)
   return (
         <div key={producto.id} className="border rounded-lg bg-white p-4 text-slate-900 transition-all duration-300 hover:scale-[1.05] hover:shadow-xl hover:-translate-y-2">
         
       
        <div className="relative mb-3">
         <img className="w-full h-48 object-contain rounded-md" 
-        src={producto.imagen}
-        alt={producto.descripcion}
+        src={""}
+        alt={"producto.descripcion"}
         />
 
       {producto.id === 1 && (
@@ -26,10 +29,12 @@ function ProductCard({producto}: {producto:Producto}) {
 
         
 )}
+
+<button onClick={() => agregarProducto(producto)} className="bg-blue-500 text-white px-8 py-2"> agregar al carrito</button>
+
 </div>
  
- <h3>{producto.codigo}</h3>
- <p>{producto.descripcion}</p>
+ 
  <p className="font-bold">${producto.precio}</p>
  </div>  )
 }

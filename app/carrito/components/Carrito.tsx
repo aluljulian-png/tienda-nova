@@ -4,13 +4,11 @@
     import ResumenCarrito from "./ResumenCarrito";
     import CarritoVacio from "./CarritoVacio";
     import { useState, useEffect, useRef } from "react"
-    import { mockListaProductos } from "@/app/data/data";
     import type { Producto } from "@/app/types/producto";    
-
+    import { useContext } from "react";
+    import { CarritoContext } from "@/app/context/CarritoContext";
 
 export default function Carrito()  {
-
-const [listaProductos, setListaProductos] = useState<Producto[]>(mockListaProductos);
 
 const [carritoAbierto, setCarritoAbierto] = useState(true);
 
@@ -20,13 +18,24 @@ const [cargandoCarrito, setCargandoCarrito] = useState(true);
 
 const temporizadorRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-const cantidadTotal = listaProductos.reduce((acumulador, producto) => {
-        return acumulador + producto.cantidad;
-    }, 0)
+const contexto = useContext(CarritoContext);
 
-const totalPagar = listaProductos.reduce((acumulador, producto) => {
-        return acumulador + (producto.precio * producto.cantidad);
-    }, 0);
+const {
+    carrito,
+    setCarrito,
+    agregarProducto,
+    quitarProducto,
+    aumentarCantidad,
+    reducirCantidad
+} = contexto;
+
+const cantidadTotal = carrito.reduce((acumulador, producto) => {
+    return acumulador + producto.cantidad;
+}, 0);
+
+const totalPagar = carrito.reduce((acumulador, producto) => {
+    return acumulador + (producto.precio * producto.cantidad);
+}, 0);
         
 const mostrarNotificacion = (mensaje: string) => {
     
@@ -42,59 +51,23 @@ temporizadorRef.current = setTimeout(() => {
 
 }
 
-const agregarProducto = (producto: Producto) => {
-  setListaProductos((prev) => {
-    const existe = prev.find(
-      (item) => item.id === producto.id
-    );
 
-    if (existe) {
-      return prev.map((item) =>
-        item.nombre === producto.nombre
-          ? { ...item, cantidad: item.cantidad + 1 }
-          : item
-      );
-    }
-
-    return [...prev, { ...producto, cantidad: 1 }];
-  });
-};
-
-const aumentarCantidad = (producto: Producto) => {
-  setListaProductos((prev) =>
-    prev.map((item) =>
-      item.id === producto.id
-        ? { ...item, cantidad: item.cantidad + 1 }
-        : item
-    )
-  );
-};
-const reducirCantidad = (producto: Producto) => {
-  setListaProductos((prev) =>
-    prev.map((item) =>
-      item.id === producto.id
-        ? { ...item, cantidad: item.cantidad - 1 }
-        : item
-    )
-  );
-};
 
 const eliminarProducto = (producto: Producto) => {
-    setListaProductos((prev) =>
-    prev.filter((item) =>   item.id !== producto.id)
-    );
+    quitarProducto(producto.id);
+   
 };
 
 useEffect(() => {
+    
     const datosGuardados = localStorage.getItem("carrito");
-
 
     if (datosGuardados) {
         const productosGuardados: Producto[] = JSON.parse(datosGuardados);
-        setListaProductos(productosGuardados);
+        setCarrito(productosGuardados);
     }
     setCargandoCarrito(false);
-}, []);
+}, [carrito]);
 
 useEffect(() => {
 
@@ -139,9 +112,9 @@ useEffect(() => {
 
     if (cargandoCarrito) return;
 
-    localStorage.setItem("carrito", JSON.stringify(listaProductos));
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 
-},  [listaProductos, cargandoCarrito]);
+},  [carrito, cargandoCarrito]);
 
     return (
         <main className="mx-auto max-w-4xl p-6">
@@ -158,7 +131,7 @@ useEffect(() => {
     placeholder="Escribí algo para probar..."
     className="mb-4 rounded-lg border p-2"
 />
-    <button className="rounded-lg bg-red-600 text-white hover:bg-red-700" onClick ={() => setListaProductos([])}>
+    <button className="rounded-lg bg-red-600 text-white hover:bg-red-700" onClick ={() => setCarrito([])}>
             Vaciar Carrito
         </button>
         
@@ -167,11 +140,11 @@ useEffect(() => {
         
     <EncabezadoCarrito/>
 
-        {listaProductos.length === 0 ? (
+        {carrito.length === 0 ? (
             <CarritoVacio />    
         ) : (
             <>
-            <ListaProductos productos={listaProductos} 
+            <ListaProductos productos={carrito} 
             mostrarNotificacion={mostrarNotificacion} 
             agregarProducto={agregarProducto}
             aumentarCantidad={aumentarCantidad}

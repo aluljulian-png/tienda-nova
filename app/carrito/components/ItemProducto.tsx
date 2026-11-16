@@ -1,4 +1,4 @@
-import { Producto } from "@/app/types/producto";
+import type { Producto } from "@/app/types/producto";
 
 
 export default function ItemProducto({
