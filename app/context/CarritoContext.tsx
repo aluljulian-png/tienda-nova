@@ -1,23 +1,33 @@
 "use client";
 import { createContext, useState} from "react";
-import type { Producto } from "../types/producto";
+import type { Producto, ItemCarrito } from "../types/producto";
 
 
 type CarritoContextType =   {
-    carrito: Producto[];
-    setCarrito: React.Dispatch<React.SetStateAction<Producto[]>>;
+    carrito: ItemCarrito[];
+    cantidadTotal: number;
+    totalPagar: number;
+    cargarCarrito: (productos: ItemCarrito[]) => void;
+    vaciarCarrito: () => void;
     quitarProducto: (id: number) => void;
     aumentarCantidad: (id: number) => void;
     agregarProducto: (producto: Producto) => void;
     reducirCantidad: (id: number) => void;
 };
 
-export const CarritoContext = createContext<CarritoContextType  >({carrito: [], setCarrito: () => {}, quitarProducto: (id) => {}, aumentarCantidad: (id) => {}, agregarProducto: (producto) =>{}, reducirCantidad: (id) => {}});
+export const CarritoContext = createContext<CarritoContextType  >({carrito: [],cantidadTotal: 0,totalPagar: 0,cargarCarrito: (productos) => {},vaciarCarrito: () => {}, quitarProducto: (id) => {}, aumentarCantidad: (id) => {}, agregarProducto: (producto) =>{}, reducirCantidad: (id) => {}});
 
 export function CarritoProvider ({ children}:  { children: React.ReactNode}){
-    const [carrito, setCarrito] = useState<Producto[]>([]);
+    const [carrito, setCarrito] = useState<ItemCarrito[]>([]);
 
-const agregarProducto = (producto: Producto) => {
+const cantidadTotal = carrito.reduce ((acumulador, producto) => {
+    return acumulador + producto.cantidad;
+}, 0 )
+
+const totalPagar = carrito.reduce ((acumulador, producto) => {
+    return  acumulador + (producto.precio * producto.cantidad)
+},0)
+    const agregarProducto = (producto: Producto) => {
     setCarrito((prev) => {
     const existe = prev.find((item) => item.id === producto.id);
         
@@ -69,8 +79,15 @@ const aumentarCantidad = (id: number) => {
         );
     });
 };
+
+const vaciarCarrito = () => {
+    setCarrito([]);
+};
+const cargarCarrito = (productos: ItemCarrito[]) => {
+    setCarrito(productos);
+}
     return (
-        <CarritoContext.Provider value={{ carrito, setCarrito,agregarProducto, quitarProducto, aumentarCantidad,reducirCantidad}}>
+        <CarritoContext.Provider value={{ carrito, cantidadTotal,vaciarCarrito, totalPagar, cargarCarrito, agregarProducto, quitarProducto, aumentarCantidad,reducirCantidad}}>
             {children}
         </CarritoContext.Provider>
     );

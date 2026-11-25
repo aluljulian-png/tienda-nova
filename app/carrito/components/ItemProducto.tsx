@@ -1,4 +1,4 @@
-import type { Producto } from "@/app/types/producto";
+import type { ItemCarrito } from "@/app/types/producto";
 
 
 export default function ItemProducto({
@@ -8,7 +8,7 @@ export default function ItemProducto({
   onEliminar,
   onReducir,
 }: {
-  producto: Producto;
+  producto: ItemCarrito;
   onVerDetalle: () => void;
   onAumentar: () => void;
   onEliminar: () => void;

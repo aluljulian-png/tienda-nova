@@ -4,7 +4,7 @@
     import ResumenCarrito from "./ResumenCarrito";
     import CarritoVacio from "./CarritoVacio";
     import { useState, useEffect, useRef } from "react"
-    import type { Producto } from "@/app/types/producto";    
+    import type { ItemCarrito } from "@/app/types/producto";    
     import { useContext } from "react";
     import { CarritoContext } from "@/app/context/CarritoContext";
 
@@ -22,21 +22,16 @@ const contexto = useContext(CarritoContext);
 
 const {
     carrito,
-    setCarrito,
+    cantidadTotal,
+    totalPagar,
+    cargarCarrito,
+    vaciarCarrito,
     agregarProducto,
     quitarProducto,
     aumentarCantidad,
     reducirCantidad
 } = contexto;
 
-const cantidadTotal = carrito.reduce((acumulador, producto) => {
-    return acumulador + producto.cantidad;
-}, 0);
-
-const totalPagar = carrito.reduce((acumulador, producto) => {
-    return acumulador + (producto.precio * producto.cantidad);
-}, 0);
-        
 const mostrarNotificacion = (mensaje: string) => {
     
     setNotificacion(mensaje);
@@ -53,21 +48,20 @@ temporizadorRef.current = setTimeout(() => {
 
 
 
-const eliminarProducto = (producto: Producto) => {
+const eliminarProducto = (producto: ItemCarrito) => {
     quitarProducto(producto.id);
    
 };
 
 useEffect(() => {
-    
     const datosGuardados = localStorage.getItem("carrito");
 
     if (datosGuardados) {
-        const productosGuardados: Producto[] = JSON.parse(datosGuardados);
-        setCarrito(productosGuardados);
+        const productosGuardados: ItemCarrito[] = JSON.parse(datosGuardados);
+        cargarCarrito(productosGuardados);
     }
     setCargandoCarrito(false);
-}, [carrito]);
+}, []);
 
 useEffect(() => {
 
@@ -131,7 +125,7 @@ useEffect(() => {
     placeholder="Escribí algo para probar..."
     className="mb-4 rounded-lg border p-2"
 />
-    <button className="rounded-lg bg-red-600 text-white hover:bg-red-700" onClick ={() => setCarrito([])}>
+    <button className="rounded-lg bg-red-600 text-white hover:bg-red-700" onClick ={vaciarCarrito}>
             Vaciar Carrito
         </button>
         

@@ -1,5 +1,5 @@
 import ProductCard from '../components/ProductCard';
-import { mockListaProductos } from '../data/data';
+import { mockListaProductos } from '../data/producto';
 import { Producto } from '../types/producto';
 
 

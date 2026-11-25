@@ -1,6 +1,7 @@
-import { Producto } from "./Carrito";
+import type { ItemCarrito } from "@/app/types/producto";
+
 type Props = {
-  producto: Producto;
+  producto: ItemCarrito;
   onCerrar: () => void;
   onAgregar: () => void;
 };

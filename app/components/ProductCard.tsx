@@ -1,6 +1,6 @@
 "use client";
 import { useContext } from "react";
-import { Producto } from "../types/producto"
+import type { Producto } from "../types/producto"
 import { CarritoContext } from "../context/CarritoContext";
 
 function ProductCard({producto}: {producto:Producto}) {
@@ -11,10 +11,12 @@ const {agregarProducto} = useContext(CarritoContext)
       
        <div className="relative mb-3">
         <img className="w-full h-48 object-contain rounded-md" 
-        src={""}
-        alt={"producto.descripcion"}
+        src={producto.imagen}
+        alt={producto.nombre}
         />
-
+      <h2 className="text-lg font-bold">
+    {producto.nombre}
+    </h2>
       {producto.id === 1 && (
         <span className="absolute top-2 left-2 rounded-md bg-red-600 px-3 py-1 text-sm font-bold text-white">
       

@@ -1,14 +1,14 @@
-import type { Producto } from "@/app/types/producto"
+import type { ItemCarrito, Producto } from "@/app/types/producto"
 import ItemProducto from "./ItemProducto"
 import { useState, useEffect } from "react";
 import Modal from "./Modal";
 
 type Props = {
-    productos: Producto[];
+    productos: ItemCarrito[];
     mostrarNotificacion: (mensaje: string) => void;
     agregarProducto:     (producto: Producto) => void;
     aumentarCantidad:    (id: number) => void;
-    eliminarProducto:    (producto: Producto) => void;
+    eliminarProducto:    (producto: ItemCarrito) => void;
     reducirCantidad:     (id: number)  => void;
 };
 
@@ -17,9 +17,9 @@ function ListaProductos(props: Props) {
 
 
 const [productoSeleccionado, setProductoSeleccionado] = 
-    useState<Producto | null>(null); 
+    useState<ItemCarrito | null>(null); 
  
-const verDetalle = (producto: Producto) => {    
+const verDetalle = (producto: ItemCarrito) => {    
     setProductoSeleccionado(producto);
     setIsOpen(true);
 }
